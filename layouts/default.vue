@@ -34,7 +34,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // スライダーの初期値
 const slider = ref(8);
@@ -56,6 +56,7 @@ const onPassword = () => {
   let seed = ref(letters.value + letters.value.toUpperCase());
   //   数字
   const numbers = ref("0123456789");
+  const lastNumbers = ref(numbers.value[Math.floor(Math.random() * 10)]);
   if (numbersCheckbox.value) {
     seed.value += numbers.value;
   }
@@ -64,10 +65,25 @@ const onPassword = () => {
   if (symbolsCheckbox.value) {
     seed.value += symbols.value;
   }
+  //   最初の文字
+  //   let firstPass = ref(
+  //     letters.value.toUpperCase()[Math.floor(Math.random() * 10)]
+  //   );
   //   ループ処理
-  for (let i = 0; i < slider.value; i++) {
-    password.value += seed.value[Math.floor(Math.random() * seed.value.length)];
+  if (numbersCheckbox.value === false) {
+    for (let i = 0; i < slider.value; i++) {
+      password.value +=
+        seed.value[Math.floor(Math.random() * seed.value.length)];
+    }
   }
+  //   result.value = firstPass.value + password.value;
   result.value = password.value;
+  if (numbersCheckbox.value) {
+    for (let i = 0; i < slider.value - 1; i++) {
+      password.value +=
+        seed.value[Math.floor(Math.random() * seed.value.length)];
+    }
+    result.value = password.value + lastNumbers.value;
+  }
 };
 </script>
